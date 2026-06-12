@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - InsightHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg-color: #f8fafc;
+      --surface-color: rgba(255, 255, 255, 0.85);
+      --text-color: #0f172a;
+      --text-muted: #64748b;
+      --border-color: rgba(226, 232, 240, 0.8);
+      --input-bg: rgba(255, 255, 255, 0.9);
+    }
+    
+    [data-theme="dark"] {
+      --primary: #6366f1;
+      --primary-hover: #818cf8;
+      --bg-color: #0f172a;
+      --surface-color: rgba(30, 41, 59, 0.7);
+      --text-color: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(51, 65, 85, 0.5);
+      --input-bg: rgba(15, 23, 42, 0.6);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      position: relative;
+      overflow: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Glassmorphism background blobs */
+    .glow-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .blob {
+      position: absolute;
+      filter: blur(80px);
+      border-radius: 50%;
+      opacity: 0.5;
+      z-index: 0;
+    }
+    .blob-1 { top: -10%; left: -10%; width: 400px; height: 400px; background: #4f46e5; }
+    .blob-2 { bottom: -10%; right: -10%; width: 500px; height: 500px; background: #0ea5e9; }
+    .blob-3 { top: 40%; left: 60%; width: 300px; height: 300px; background: #8b5cf6; }
+
+    .login-container {
+      position: relative;
+      z-index: 10;
+      background: var(--surface-color);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+    .logo-icon-wrapper {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary) 0%, #0ea5e9 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+    }
+    .logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--text-color);
+    }
+    .logo-text .accent {
+      color: var(--primary);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+    }
+    .form-control {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 16px;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-color);
+      font-size: 15px;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      margin-top: 10px;
+    }
+    .btn-login:hover {
+      background: var(--primary-hover);
+    }
+    
+    .error-msg {
+      color: #ef4444;
+      font-size: 14px;
+      text-align: center;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .alert {
+      background: rgba(245, 158, 11, 0.1);
+      border-left: 4px solid #f59e0b;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: #d97706;
+      display: none;
+    }
+    [data-theme="dark"] .alert {
+      color: #fbbf24;
+    }
+
+    /* Theme Toggle */
+    .theme-toggle-wrapper {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 20;
+    }
+    .theme-toggle {
+      background: var(--surface-color);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
+    }
+    .theme-toggle:hover {
+      color: var(--text-color);
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="theme-toggle-wrapper">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class="login-container">
+    <div class="logo">
+      <div class="logo-icon-wrapper">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 9l-5 5-3-3-4 4"></path><path d="M14 9h4v4"></path></svg>
+      </div>
+      <span class="logo-text">Insight<span class="accent">Hub</span></span>
+    </div>
+
+    <div class="alert" id="sessionAlert">
+      Session expired. Please login again.
+    </div>
+
+    <div class="error-msg" id="errorMsg">Invalid username or password.</div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" class="form-control" placeholder="Enter your username" required autofocus />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="Enter your password" required />
+      </div>
+      <button type="submit" class="btn-login" id="loginBtn">Sign In</button>
+    </form>
+  </div>
+
+  <script>
+    // Theme toggling
+    const themeToggle = document.getElementById('themeToggle');
+    const htmlEl = document.documentElement;
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    htmlEl.setAttribute('data-theme', savedTheme);
+
+    const updateThemeIcon = (theme) => {
+      if (theme === 'dark') {
+        themeToggle.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+      } else {
+        themeToggle.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+      }
+    };
+    updateThemeIcon(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const curr = htmlEl.getAttribute('data-theme');
+      const next = curr === 'light' ? 'dark' : 'light';
+      htmlEl.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeIcon(next);
+    });
+
+    // Check for expired session parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('expired')) {
+      document.getElementById('sessionAlert').style.display = 'block';
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // Handle Login
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const userVal = document.getElementById('username').value.trim();
+      const passVal = document.getElementById('password').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+      const loginBtn = document.getElementById('loginBtn');
+      const sessionAlert = document.getElementById('sessionAlert');
+
+      errorMsg.style.display = 'none';
+      sessionAlert.style.display = 'none';
+      loginBtn.textContent = 'Signing in...';
+      loginBtn.disabled = true;
+
+      try {
+        const res = await fetch('/api/v1/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: userVal, password: passVal })
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok && data.success) {
+          window.location.href = '/';
+        } else {
+          errorMsg.textContent = data.error || 'Invalid credentials.';
+          errorMsg.style.display = 'block';
+          loginBtn.textContent = 'Sign In';
+          loginBtn.disabled = false;
+        }
+      } catch (err) {
+        errorMsg.textContent = 'Connection error. Please try again later.';
+        errorMsg.style.display = 'block';
+        loginBtn.textContent = 'Sign In';
+        loginBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

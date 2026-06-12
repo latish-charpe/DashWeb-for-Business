@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InsightHub | Real-Time Business Performance Monitoring</title>
+  <meta name="description" content="Premium real-time enterprise SaaS business intelligence dashboard for Indian corporations." />
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css?v=3.4.0" />
+  
+  <!-- ApexCharts -->
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+<body>
+  <!-- Decorative Glow Blobs -->
+  <div class="glow-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon-wrapper">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-top: 1px;"><path d="M3 3v18h18"></path><path d="M18 9l-5 5-3-3-4 4"></path><path d="M14 9h4v4"></path></svg>
+        </div>
+        <span class="logo-text">Insight<span class="accent">Hub</span></span>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">OVERVIEW</div>
+      <ul>
+        <li class="nav-item active" data-view="dashboard">
+          <a href="#dashboard" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="9" rx="1.5"/>
+              <rect x="14" y="3" width="7" height="5" rx="1.5"/>
+              <rect x="14" y="12" width="7" height="9" rx="1.5"/>
+              <rect x="3" y="16" width="7" height="5" rx="1.5"/>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item" data-view="revenue">
+          <a href="#revenue" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            <span>Revenue Analytics</span>
+          </a>
+        </li>
+        <li class="nav-item" data-view="sales">
+          <a href="#sales" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21.21 15.89A10 10 0 1 1 8 2.83M22 12A10 10 0 0 0 12 2v10z"/>
+            </svg>
+            <span>Sales Analytics</span>
+          </a>
+        </li>
+        <li class="nav-item" data-view="customers">
+          <a href="#customers" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            <span>Customer Insights</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-section">MANAGEMENT</div>
+      <ul>
+        <li class="nav-item" data-view="orders">
+          <a href="#orders" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            <span>Orders Management</span>
+            <span class="badge badge-primary">14</span>
+          </a>
+        </li>
+        <li class="nav-item" data-view="alerts">
+          <a href="#alerts" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            <span>Business Alerts</span>
+            <span class="badge badge-danger">3</span>
+          </a>
+        </li>
+        <li class="nav-item" data-view="ai-insights">
+          <a href="#ai-insights" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+            <span>AI Insights</span>
+          </a>
+        </li>
+        <li class="nav-item" data-view="executive-reports">
+          <a href="#executive-reports" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            <span>Executive Reports</span>
+          </a>
+        </li>
+      </ul>
+
+      
+      <div class="nav-section">PREFERENCES</div>
+      <ul>
+        <li class="nav-item" data-view="settings">
+          <a href="#settings" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0 .33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            <span>Settings</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="content-wrapper" id="contentWrapper">
+    <!-- Topbar Navigation -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Open sidebar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <div class="mobile-logo-bar">
+          <div class="logo-icon-wrapper mini">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-top: 1px;"><path d="M3 3v18h18"></path><path d="M18 9l-5 5-3-3-4 4"></path><path d="M14 9h4v4"></path></svg>
+          </div>
+        </div>
+        <div class="search-bar">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search parameters, analytics, UPI logs..." />
+          <div class="search-results" id="searchResults"></div>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <!-- Live Clock -->
+        <div class="clock-widget">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span id="liveClock">00:00:00 AM</span>
+        </div>
+
+        <!-- Light/Dark Mode Toggle -->
+        <button class="action-btn" id="themeToggle" title="Toggle Appearance">
+          <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+
+        <!-- Notification Bell -->
+        <div class="dropdown-container" id="notifContainer">
+          <button class="action-btn notification-btn" id="notifBell" aria-label="Notifications">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            <span class="notification-indicator"></span>
+          </button>
+          <div class="dropdown-menu notification-dropdown" id="notifDropdown">
+            <div class="dropdown-header">
+              <h3>Notifications</h3>
+              <button class="txt-btn" id="clearAllNotifications">Clear All</button>
+            </div>
+            <div class="notification-list" id="dropdownNotifList">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- User Profile Dropdown -->
+        <div class="dropdown-container" id="userContainer">
+          <button class="profile-trigger" id="profileTrigger">
+            <div class="avatar-circle">--</div>
+            <span class="profile-name">shrikant</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="dropdown-menu profile-dropdown" id="profileDropdown">
+            <div class="profile-dropdown-header">
+              <span class="user-full-name">shrikant</span>
+              <span class="user-email">shrikant@demo.com</span>
+            </div>
+            <hr />
+            <a href="#settings" class="dropdown-item view-switch-trigger" data-target-view="settings">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0 .33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+              <span>Account Settings</span>
+            </a>
+            <hr />
+            <button class="dropdown-item logout-btn" id="logoutBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+              </svg>
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main View Panel (Dynamically showing views) -->
+    <main class="main-content">
+      
+      <!-- VIEW 1: DASHBOARD OVERVIEW -->
+      <section class="dashboard-view active-view" id="view-dashboard">
+        
+        <!-- Dashboard View Header -->
+        <div class="view-header">
+          <div>
+            <span class="breadcrumb">Overview &gt; Dashboard</span>
+            <h1 class="view-title">InsightHub</h1>
+            <p class="view-subtitle">Real-time business performance monitoring, GST/UPI metrics, and AI predictive insights.</p>
+          </div>
+          <div class="view-actions">
+            <span class="last-updated-badge" id="lastUpdatedBadge">Refreshed: Just now</span>
+            <span class="header-date-badge" style="font-size: 0.85rem; color: var(--text-muted); margin-right: 8px;">Date: <span id="currentDate">12/06/2026</span></span>
+            <button class="btn btn-secondary" id="exportCSVBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+              </svg>
+              <span>Export CSV (&#8377;)</span>
+            </button>
+            <button class="btn btn-primary" id="downloadReportBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              </svg>
+              <span>Download PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Interactive Active Filters & Drill-down Bar -->
+        <div class="active-filters-bar-container" style="margin-bottom: 24px; display: flex; flex-direction: column; gap: 8px;">
+          <div class="drilldown-breadcrumbs" id="drilldownBreadcrumbs">
+            <span class="breadcrumb-node active" data-level="dashboard">InsightHub Overview</span>
+          </div>
+          
+          <div class="active-filters-bar" id="activeFiltersBar" style="display: none; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 20px; background: rgba(79, 70, 229, 0.04); border: 1px solid var(--panel-border); border-radius: 12px; transition: var(--transition-smooth);">
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Active Filters:</span>
+              <span class="filter-badge" id="badge-region" style="display: none;">Region: <span class="val"></span><span class="remove" data-filter="region">&times;</span></span>
+              <span class="filter-badge" id="badge-period" style="display: none;">Period: <span class="val"></span><span class="remove" data-filter="period">&times;</span></span>
+              <span class="filter-badge" id="badge-month" style="display: none;">Month: <span class="val"></span><span class="remove" data-filter="month">&times;</span></span>
+              <span class="filter-badge" id="badge-segment" style="display: none;">Segment: <span class="val"></span><span class="remove" data-filter="segment">&times;</span></span>
+              <span class="filter-badge" id="badge-product" style="display: none;">Product: <span class="val"></span><span class="remove" data-filter="product">&times;</span></span>
+            </div>
+            <button class="btn btn-secondary" id="resetFiltersBtn" style="padding: 6px 14px; font-size: 0.78rem; border-radius: 8px; border-color: rgba(79, 70, 229, 0.2);">Reset Filters</button>
+          </div>
+        </div>
+
+        <!-- Upper Metrics Hub (Health Score + Indian Metrics) -->
+        <div class="vis-grid">
+          <!-- Business Health Score Card -->
+          <div class="widget-card health-score-card">
+            <div class="health-card-header">
+              <h3>AI Business Health Score</h3>
+              <span class="health-status-badge">Excellent Performance</span>
+            </div>
+            <div class="health-main">
+              <div class="health-gauge" id="healthGaugeContainer"></div>
+              <div class="health-score-meta" id="health-score-container">
+                <span class="score-num"><span id="dynamic-health-score">...</span><span class="score-max">/100</span></span>
+                <p class="score-desc">Calculated based on Revenue Growth, Completed Order Percentage, Customer Growth, Profit Margin, and Pending Order Ratio.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Database Metrics -->
+          <div class="widget-card indian-metrics-card" style="padding-bottom: 20px;">
+            <div class="widget-header">
+              <h3>Core Operations Metrics</h3>
+              <span class="widget-subtitle">Click cards to filter dashboard</span>
+            </div>
+            <div class="indian-metrics-grid" style="gap: 15px;">
+              <div class="metric-item-box clickable-metric" onclick="filterByTopProduct()" style="cursor: pointer; transition: transform 0.2s;">
+                <span class="m-box-title">Top Selling Product</span>
+                <span class="m-box-val" id="metric-top-product" style="font-size: 1.2rem;">Loading...</span>
+                <span class="m-box-sub text-success" id="metric-top-units">... units</span>
+              </div>
+              <div class="metric-item-box">
+                <span class="m-box-title">Average Order Value (AOV)</span>
+                <span class="m-box-val" id="metric-aov">Loading...</span>
+                <span class="m-box-sub text-success">Per transaction</span>
+              </div>
+              <div class="metric-item-box clickable-metric" onclick="filterByStatus('Delivered')" style="cursor: pointer; transition: transform 0.2s;">
+                <span class="m-box-title">Completed Orders</span>
+                <span class="m-box-val" id="metric-completed">Loading...</span>
+                <span class="m-box-sub text-success">Fully Delivered</span>
+              </div>
+              <div class="metric-item-box clickable-metric" onclick="filterByStatus('Pending')" style="cursor: pointer; transition: transform 0.2s;">
+                <span class="m-box-title">Pending Orders</span>
+                <span class="m-box-val" id="metric-pending">Loading...</span>
+                <span class="m-box-sub" style="color: #f59e0b;">Awaiting processing</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI Grid -->
+        <div class="kpi-grid">
+          <!-- Total Revenue -->
+          <div class="kpi-card" id="kpi-revenue">
+            <div class="kpi-card-glow"></div>
+            <div class="kpi-card-inner">
+              <div class="kpi-top">
+                <span class="kpi-title">Total Revenue</span>
+                <span class="trend trend-up">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
+                  </svg>
+                  12.4%
+                </span>
+              </div>
+              <div class="kpi-main">
+                <h2 class="kpi-value" id="kpiVal-revenue">&#8377;0.00</h2>
+                <div class="kpi-icon-wrapper revenue">
+                  <span>&#8377;</span>
+                </div>
+              </div>
+              <div class="kpi-progress">
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill" style="width: 78.2%"></div>
+                </div>
+              </div>
+              <div class="kpi-footer">
+                <span class="kpi-comparison">vs last month: <strong>&#8377;4,30,00,000</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Sales -->
+          <div class="kpi-card" id="kpi-sales">
+            <div class="kpi-card-glow"></div>
+            <div class="kpi-card-inner">
+              <div class="kpi-top">
+                <span class="kpi-title">Total Sales</span>
+                <span class="trend trend-up">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
+                  </svg>
+                  8.2%
+                </span>
+              </div>
+              <div class="kpi-main">
+                <h2 class="kpi-value" id="kpiVal-sales">0</h2>
+                <div class="kpi-icon-wrapper sales">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-progress">
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill" style="width: 65.4%"></div>
+                </div>
+              </div>
+              <div class="kpi-footer">
+                <span class="kpi-comparison">vs last month: <strong>17,321</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Customers -->
+          <div class="kpi-card" id="kpi-customers">
+            <div class="kpi-card-glow"></div>
+            <div class="kpi-card-inner">
+              <div class="kpi-top">
+                <span class="kpi-title">Total Customers</span>
+                <span class="trend trend-up">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
+                  </svg>
+                  5.7%
+                </span>
+              </div>
+              <div class="kpi-main">
+                <h2 class="kpi-value" id="kpiVal-customers">0</h2>
+                <div class="kpi-icon-wrapper customers">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-progress">
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill" style="width: 82.1%"></div>
+                </div>
+              </div>
+              <div class="kpi-footer">
+                <span class="kpi-comparison">vs last month: <strong>89,140</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Orders -->
+          <div class="kpi-card" id="kpi-orders">
+            <div class="kpi-card-glow"></div>
+            <div class="kpi-card-inner">
+              <div class="kpi-top">
+                <span class="kpi-title">Total Orders</span>
+                <span class="trend trend-down">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/>
+                  </svg>
+                  2.1%
+                </span>
+              </div>
+              <div class="kpi-main">
+                <h2 class="kpi-value" id="kpiVal-orders">0</h2>
+                <div class="kpi-icon-wrapper orders">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-progress">
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill" style="width: 55.8%"></div>
+                </div>
+              </div>
+              <div class="kpi-footer">
+                <span class="kpi-comparison">vs last month: <strong>24,350</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profit Margin -->
+          <div class="kpi-card" id="kpi-profit">
+            <div class="kpi-card-glow"></div>
+            <div class="kpi-card-inner">
+              <div class="kpi-top">
+                <span class="kpi-title">Profit Margin</span>
+                <span class="trend trend-up">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
+                  </svg>
+                  3.9%
+                </span>
+              </div>
+              <div class="kpi-main">
+                <h2 class="kpi-value" id="kpiVal-profit">0%</h2>
+                <div class="kpi-icon-wrapper profit">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-progress">
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill" style="width: 76.5%"></div>
+                </div>
+              </div>
+              <div class="kpi-footer">
+                <span class="kpi-comparison">Industry average: <strong>28.4%</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Monthly Growth Rate -->
+          <div class="kpi-card" id="kpi-growth">
+            <div class="kpi-card-glow"></div>
+            <div class="kpi-card-inner">
+              <div class="kpi-top">
+                <span class="kpi-title">Monthly Growth</span>
+                <span class="trend trend-up">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
+                  </svg>
+                  1.2%
+                </span>
+              </div>
+              <div class="kpi-main">
+                <h2 class="kpi-value" id="kpiVal-growth">0%</h2>
+                <div class="kpi-icon-wrapper growth">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-progress">
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill" style="width: 62.0%"></div>
+                </div>
+              </div>
+              <div class="kpi-footer">
+                <span class="kpi-comparison">Year-over-Year: <strong>22.1%</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Revenue Target Progress Tracking Widget -->
+        <div class="widget-card target-widget">
+          <div class="widget-header">
+            <h3>Q2 Revenue Target Progress Tracking</h3>
+            <span class="widget-value">&#8377;4,82,56,000 / &#8377;5,00,00,000 (96.5%)</span>
+          </div>
+          <div class="progress-bar-track large">
+            <div class="progress-bar-fill animate-pulse" style="width: 96.5%"></div>
+          </div>
+          <p class="target-desc">Estimated to achieve 100% target by <strong>15th June</strong>, 15 days ahead of schedule.</p>
+        </div>
+
+        <!-- AI Business Intelligence Section -->
+        <div class="widget-card ai-bi-section">
+          <div class="widget-header">
+            <h3>
+              <span class="ai-badge">AI</span> Business Intelligence Center
+            </h3>
+            <span class="widget-subtitle">Predictive models refreshed 5m ago</span>
+          </div>
+          
+          <div class="ai-insights-grid">
+            <div class="ai-insight-column">
+              <h4>Revenue Growth Analysis</h4>
+              <p id="ai-insight-revenue">Maharashtra &amp; Gujarat lead B2B cloud subscriptions, driving a combined <strong>&#8377;1.20 Cr</strong> expansion this month.</p>
+            </div>
+            <div class="ai-insight-column">
+              <h4>Customer Retention Insights</h4>
+              <p id="ai-insight-customers">Karnataka customer satisfaction score (78 NPS) raised retention rate to <strong>95.8%</strong>. Customer Lifetime Value average up.</p>
+            </div>
+            <div class="ai-insight-column">
+              <h4>Sales Forecast</h4>
+              <p id="ai-insight-sales">July ARR is predicted to expand by <strong>15%</strong> based on active negotiation loops with Delhi logistics clients.</p>
+            </div>
+            <div class="ai-insight-column">
+              <h4>Business Recommendations</h4>
+              <p id="ai-insight-recommendations">Direct advertising allocation towards Pune/Ahmedabad nodes. Optimize UPI retry algorithms on GST workflows.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid of primary visualizations -->
+        <div class="vis-grid">
+          <!-- Monthly Sales Trend -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <h3>Monthly Sales Trend</h3>
+                <span class="chart-desc">Historical sales volume and performance over time</span>
+              </div>
+              <div class="chart-header-actions">
+                <select class="chart-time-filter" id="filter-sales">
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly" selected>Monthly</option>
+                  <option value="quarterly">Quarterly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+                <div class="chart-controls">
+                  <button class="chart-tab active" id="btnSalesLine">Line</button>
+                  <button class="chart-tab" id="btnSalesArea">Area</button>
+                </div>
+              </div>
+            </div>
+            <div class="chart-container" id="salesTrendChartContainer"></div>
+          </div>
+
+          <!-- Revenue by Indian Region -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <h3>Revenue Distribution by Region</h3>
+                <span class="chart-desc">Geographic sales performance allocation</span>
+              </div>
+              <div class="chart-header-actions">
+                <select class="chart-time-filter" id="filter-region">
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly" selected>Monthly</option>
+                  <option value="quarterly">Quarterly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
+            </div>
+            <div class="chart-container flex-center" id="revenueRegionChartContainer"></div>
+          </div>
+        </div>
+
+        <!-- Grid of secondary visualizations -->
+        <div class="vis-grid">
+          <!-- Customer Growth -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <h3>Customer Growth Analytics</h3>
+                <span class="chart-desc">New acquisitions vs returning customers</span>
+              </div>
+              <div class="chart-header-actions">
+                <select class="chart-time-filter" id="filter-customers">
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly" selected>Monthly</option>
+                  <option value="quarterly">Quarterly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
+            </div>
+            <div class="chart-container" id="customerGrowthChartContainer"></div>
+          </div>
+
+          <!-- Profit Analysis -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <div>
+                <h3>Profit &amp; Expense Analysis</h3>
+                <span class="chart-desc">Revenue vs Expenses vs Net Profit</span>
+              </div>
+              <div class="chart-header-actions">
+                <select class="chart-time-filter" id="filter-profit">
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly" selected>Monthly</option>
+                  <option value="quarterly">Quarterly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
+            </div>
+            <div class="chart-container" id="profitAnalysisChartContainer"></div>
+          </div>
+        </div>
+
+        <!-- Details Row (Table + Top Performance + Alerts) -->
+        <div class="details-row">
+          <!-- Top Performing Products & CSAT Circular Gauge -->
+          <div class="side-widgets-column">
+            <!-- Top Performing Products -->
+            <div class="widget-card list-widget">
+              <div class="widget-header">
+                <h3>Top-Performing Products</h3>
+                <span class="widget-action">This Quarter</span>
+              </div>
+              <div class="ranking-list">
+                <div class="ranking-item">
+                  <span class="rank-badge">#1</span>
+                  <div class="ranking-details">
+                    <span class="ranking-name">Apple iPhone 16</span>
+                    <span class="ranking-sub">SaaS Platform</span>
+                  </div>
+                  <span class="ranking-value">&#8377;1,89,42,000</span>
+                </div>
+                <div class="ranking-item">
+                  <span class="rank-badge">#2</span>
+                  <div class="ranking-details">
+                    <span class="ranking-name">MacBook Air M4</span>
+                    <span class="ranking-sub">Subscription</span>
+                  </div>
+                  <span class="ranking-value">&#8377;1,25,40,000</span>
+                </div>
+                <div class="ranking-item">
+                  <span class="rank-badge">#3</span>
+                  <div class="ranking-details">
+                    <span class="ranking-name">Samsung Galaxy S25</span>
+                    <span class="ranking-sub">Data Protection</span>
+                  </div>
+                  <span class="ranking-value">&#8377;98,43,000</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Customer Satisfaction Widget -->
+            <div class="widget-card circular-gauge-widget">
+              <div class="widget-header">
+                <h3>Customer Satisfaction</h3>
+                <span class="widget-subtitle">NPS Score &amp; Trend</span>
+              </div>
+              <div class="gauge-chart-container" id="npsGaugeContainer"></div>
+              <div class="gauge-meta">
+                <span>NPS Score: <strong id="npsScoreVal">78</strong> &bull; Feedback Trend: <strong id="npsTrendVal" class="text-success">&#9650; Positive (+4.2%)</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Business Alerts Center & Timeline -->
+          <div class="side-widgets-column">
+            <!-- Business Alerts Center -->
+            <div class="widget-card list-widget">
+              <div class="widget-header">
+                <h3>Business Alerts Center</h3>
+                <span class="badge badge-danger">3 Critical</span>
+              </div>
+              <div class="alerts-compact-list" id="alertsCompactContainer">
+                <!-- JS populated -->
+              </div>
+            </div>
+
+            <!-- Recent Activities Timeline -->
+            <div class="widget-card list-widget">
+              <div class="widget-header">
+                <h3>Recent Activities Timeline</h3>
+              </div>
+              <div class="timeline" id="activitiesTimeline">
+                <!-- JS populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Orders Table -->
+        <div class="table-card">
+          <div class="widget-header">
+            <div>
+              <h3>Recent Orders</h3>
+              <span class="widget-subtitle">Latest business transactions</span>
+            </div>
+            <a href="#orders" class="txt-btn view-switch-trigger" data-target-view="orders">View All Orders</a>
+          </div>
+          <div class="table-wrapper">
+            <table class="orders-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer Name</th>
+                  <th>Product</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="dashboardOrdersTableBody">
+                <!-- JS populated -->
+              </tbody>
+            </table>
+            <div class="pagination" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 10px 0;">
+              <div class="pagination-info" id="mainOrdersPaginationInfo">Showing 0 orders</div>
+              <div class="pagination-controls" style="display: flex; gap: 10px;">
+                <button class="btn btn-secondary btn-sm" id="mainOrdersPrevBtn" disabled>Previous</button>
+                <button class="btn btn-secondary btn-sm" id="mainOrdersNextBtn" disabled>Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 2: REVENUE ANALYTICS -->
+      <section class="dashboard-view" id="view-revenue">
+        <div class="view-header">
+          <div>
+            <span class="breadcrumb">Overview &gt; Revenue Analytics</span>
+            <h1 class="view-title">Revenue Analysis</h1>
+            <p class="view-subtitle">Detailed breakdown of company income streams, subscriptions, and financial metrics in India.</p>
+          </div>
+        </div>
+
+        <div class="kpi-grid triple">
+          <div class="kpi-card">
+            <div class="kpi-card-inner">
+              <span class="kpi-title">Monthly Recurring Revenue (MRR)</span>
+              <h2 class="kpi-value">&#8377;11,48,000</h2>
+              <span class="trend trend-up">&#9650; 6.8% from last month</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-inner">
+              <span class="kpi-title">Annual Run Rate (ARR)</span>
+              <h2 class="kpi-value">&#8377;1,37,76,000</h2>
+              <span class="trend trend-up">&#9650; 11.2% from Q1</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-card-inner">
+              <span class="kpi-title">Customer Lifetime Value (LTV)</span>
+              <h2 class="kpi-value">&#8377;2,45,000</h2>
+              <span class="trend trend-up">&#9650; 4.2% from average</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Revenue Breakdown by Category</h3>
+          </div>
+          <div id="revenueBreakdownChart" style="height: 350px;"></div>
+        </div>
+      </section>
+
+      <!-- VIEW 3: SALES ANALYTICS -->
+      <section class="dashboard-view" id="view-sales">
+        <div class="view-header">
+          <div>
+            <span class="breadcrumb">Overview &gt; Sales Analytics</span>
+            <h1 class="view-title">Sales Analytics</h1>
+            <p class="view-subtitle">Monitor conversion rates, sales pipelines, and sales representative performances.</p>
+          </div>
+        </div>
+
+        <div class="vis-grid">
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3>Conversion Funnel</h3>
+            </div>
+            <div id="salesFunnelChart" style="height: 300px;"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3>Sales Pipeline Forecast</h3>
+            </div>
+            <div id="salesPipelineChart" style="height: 300px;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 4: CUSTOMER INSIGHTS -->
+      <section class="dashboard-view" id="view-customers">
+        <div class="view-header">
+          <div>
+            <span class="breadcrumb">Overview &gt; Customer Insights</span>
+            <h1 class="view-title">Customer Insights</h1>
+            <p class="view-subtitle">In-depth statistics about demographics, retention rate, satisfaction scores, and feedback.</p>
+          </div>
+        </div>
+
+        <div class="vis-grid">
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3>Customer Retention Rate Trend</h3>
+            </div>
+            <div id="customerRetentionChart" style="height: 300px;"></div>
+          </div>
+          <div class="widget-card list-widget">
+            <div class="widget-header">
+              <h3>Latest Customer Feedback</h3>
+            </div>
+            <div class="feedback-list">
+              <div class="feedback-item">
+                <span class="nps NPS-9">9.0</span>
+                <div class="feedback-text">
+                  <p>"InsightHub's cloud infrastructure has halved our page load times. The UI is exceptionally polished."</p>
+                  <span>- CTO, Mumbai Tech Labs</span>
+                </div>
+              </div>
+              <div class="feedback-item">
+                <span class="nps NPS-10">10</span>
+                <div class="feedback-text">
+                  <p>"Support response was under 5 minutes when configuring our private endpoint. Outstanding work."</p>
+                  <span>- Lead Architect, Bangalore FinTech</span>
+                </div>
+              </div>
+              <div class="feedback-item">
+                <span class="nps NPS-8">8.0</span>
+                <div class="feedback-text">
+                  <p>"Superb SaaS metrics and visualizations. The custom report export speeds up our monthly audit."</p>
+                  <span>- CFO, Delhi Logistics</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 5: ORDERS MANAGEMENT -->
+      <section class="dashboard-view" id="view-orders">
+        <div class="view-header">
+          <div>
+            <span class="breadcrumb">Management &gt; Orders</span>
+            <h1 class="view-title">Orders Management</h1>
+            <p class="view-subtitle">Review, modify, filter, and track all incoming enterprise orders.</p>
+          </div>
+        </div>
+
+        <div class="data-mgmt-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+          <!-- Add New Order Form -->
+          <div class="report-card">
+            <div class="report-card-header">
+              <h3>Add New Order</h3>
+            </div>
+            <div class="report-card-body">
+              <form id="addOrderForm">
+                <div class="form-group" style="margin-bottom: 15px;">
+                  <label>Customer Name</label>
+                  <input type="text" class="form-control" id="orderCustName" required />
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                  <label>Product</label>
+                  <select class="form-control" id="orderProduct" required>
+                  </select>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                  <div class="form-group">
+                    <label>Amount (₹)</label>
+                    <input type="number" step="0.01" class="form-control" id="orderAmount" required />
+                  </div>
+                  <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" class="form-control" id="orderDate" required />
+                  </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                  <div class="form-group">
+                    <label>Region</label>
+                    <select class="form-control" id="orderRegion" required>
+                      <option value="Maharashtra">Maharashtra</option>
+                      <option value="Karnataka">Karnataka</option>
+                      <option value="Delhi">Delhi</option>
+                      <option value="Gujarat">Gujarat</option>
+                      <option value="Tamil Nadu">Tamil Nadu</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Status</label>
+                    <select class="form-control" id="orderStatus" required>
+                      <option value="Delivered">Delivered</option>
+                      <option value="Processing">Processing</option>
+                      <option value="Pending">Pending</option>
+                    </select>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Order</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- CSV Upload -->
+          <div class="report-card">
+            <div class="report-card-header" style="display: flex; justify-content: space-between; align-items: center;">
+              <h3>Bulk CSV Upload</h3>
+              <button class="btn btn-secondary btn-sm" id="downloadSampleBtn">Download Sample</button>
+            </div>
+            <div class="report-card-body" style="display: flex; flex-direction: column; justify-content: center;">
+              <div class="csv-dropzone" id="csvDropzone">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 15px; color: var(--text-muted);">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                </svg>
+                <p>Drag and drop your .csv file here</p>
+                <p class="text-muted" style="font-size: 12px; margin-top: 5px;">or</p>
+                <button class="btn btn-secondary" style="margin-top: 10px;" id="csvSelectBtn">Browse Files</button>
+                <input type="file" id="csvFileInput" accept=".csv" style="display: none;" />
+              </div>
+              <div id="csvUploadProgress" style="display: none; margin-top: 15px;">
+                <p>Uploading and processing...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-header-filters" style="display: flex; flex-wrap: wrap; gap: 10px;">
+            <div class="search-bar border-style">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input type="text" id="orderTableSearch" placeholder="Search orders..." />
+            </div>
+            <div class="filter-group" style="display: flex; gap: 10px;">
+              <select id="orderProductFilter" class="form-control" style="width: auto;">
+                <option value="all">All Products</option>
+              </select>
+              <select id="orderStatusFilter" class="form-control" style="width: auto;">
+                <option value="all">All Status</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Pending">Pending</option>
+                <option value="Processing">Processing</option>
+              </select>
+              <select id="orderSortFilter" class="form-control" style="width: auto;">
+                <option value="date">Sort by Date</option>
+                <option value="amount">Sort by Amount</option>
+                <option value="name">Sort by Name</option>
+              </select>
+              <div style="display: flex; align-items: center; gap: 5px;">
+                <input type="date" id="orderStartDate" class="form-control" style="width: 130px;"/>
+                <span>to</span>
+                <input type="date" id="orderEndDate" class="form-control" style="width: 130px;"/>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="orders-table" id="mainOrdersTable">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer Name</th>
+                  <th>Product</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="ordersManagementTableBody">
+                <!-- JS populated -->
+              </tbody>
+            </table>
+            <div class="pagination" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 10px 0;">
+              <div class="pagination-info" id="mainOrdersPaginationInfo">Showing 0 orders</div>
+              <div class="pagination-controls" style="display: flex; gap: 10px;">
+                <button class="btn btn-secondary btn-sm" id="mainOrdersPrevBtn" disabled>Previous</button>
+                <button class="btn btn-secondary btn-sm" id="mainOrdersNextBtn" disabled>Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 6: BUSINESS ALERTS -->
+      <section class="dashboard-view" id="view-alerts">
+        <div class="view-header">
+          <div>
+            <span class="breadcrumb">Management &gt; Alerts &amp; Notifications</span>
+            <h1 class="view-title">Business Alerts Widget</h1>
+            <p class="view-subtitle">System monitors, financial thresholds, inventory levels, and anomalies warnings.</p>
+          </div>
+        </div>
+
+        <div class="alerts-grid-view">
+          <!-- Timeline on the left -->
+          <div class="widget-card">
+            <h3>Recent Activities Timeline</h3>
+            <div class="timeline" id="activitiesTimelineFull">
+              <!-- JS populated -->
+            </div>
+          </div>
+
+          <!-- Business Alert Centralized Management -->
+          <div class="widget-card">
+            <div class="widget-header">
+              <h3>Active System Monitors</h3>
+              <span class="badge badge-success">Online</span>
+            </div>
+            <div class="monitors-list">
+              <div class="monitor-item">
+                <span class="monitor-name">Razorpay Gateway Integration</span>
+                <span class="monitor-status healthy">Healthy (100% success)</span>
+              </div>
+              <div class="monitor-item">
+                <span class="monitor-name">GST Invoice Generator</span>
+                <span class="monitor-status healthy">Healthy</span>
+              </div>
+              <div class="monitor-item">
+                <span class="monitor-name">Customer Database Repl</span>
+                <span class="monitor-status latency">Latency 140ms</span>
+              </div>
+              <div class="monitor-item">
+                <span class="monitor-name">Prediction Service API</span>
+                <span class="monitor-status healthy">Active</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 7: AI INSIGHTS -->
+      <section class="dashboard-view" id="view-ai-insights">
+        <div class="view-header">
+          <div>
+            <span class="breadcrumb">Management &gt; Predictive Analytics</span>
+            <h1 class="view-title">AI Business Intelligence Hub</h1>
+            <p class="view-subtitle">Real-time predictive analytics, risk assessment, and strategic recommendations powered by your InsightHub transaction data.</p>
+          </div>
+          <div class="ai-page-controls">
+            <select class="ai-period-select" id="aiPeriodFilter">
+              <option value="yearly">Yearly View</option>
+              <option value="quarterly">Quarterly View</option>
+              <option value="monthly" selected>Monthly View</option>
+              <option value="weekly">Weekly View</option>
+              <option value="daily">Daily View</option>
+            </select>
+            <button class="btn-generate-report" id="aiRefreshBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              Refresh Analysis
+            </button>
+          </div>
+        </div>
+
+        <!-- AI KPI Cards -->
+        <div class="ai-kpi-grid" id="aiKpiGrid">
+          <!-- JS populated -->
+        </div>
+
+        <!-- Main Analysis Row -->
+        <div class="ai-main-grid">
+          <!-- Forecast Confidence Chart -->
+          <div class="ai-forecast-card">
+            <div class="ai-forecast-card-header">
+              <h3>Revenue Forecast Confidence Curve</h3>
+              <div class="ai-forecast-legend">
+                <div class="ai-legend-item">
+                  <div class="ai-legend-dot" style="background:#4f46e5;"></div>
+                  <span>Actual Revenue</span>
+                </div>
+                <div class="ai-legend-item">
+                  <div class="ai-legend-dot" style="background:transparent; border: 2px dashed #10b981; border-radius:50%;"></div>
+                  <span>AI Forecast</span>
+                </div>
+              </div>
+            </div>
+            <div id="aiConfidenceChart" style="height:300px;"></div>
+            <div class="ai-forecast-explanation" id="aiForecastExplanation">
+              <strong>Model Explanation:</strong> Loading forecast data from your transaction records...
+            </div>
+          </div>
+
+          <!-- Predictive Summary -->
+          <div class="ai-predictive-card" id="aiPredictiveCard">
+            <h3>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary)"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+              Predictive Analytics
+            </h3>
+            <!-- JS populated -->
+          </div>
+        </div>
+
+        <!-- AI Insight Cards -->
+        <div class="ai-insights-cards-grid" id="aiInsightCardsGrid">
+          <!-- JS populated -->
+        </div>
+
+        <!-- Executive Report + Recommendations -->
+        <div class="ai-bottom-grid">
+          <div class="ai-report-card" id="aiExecutiveReport">
+            <h3>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              AI Executive Report
+            </h3>
+            <!-- JS populated -->
+          </div>
+          <div class="ai-rec-card" id="aiRecommendationsCard">
+            <h3>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--success)"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Strategic Recommendations
+            </h3>
+            <!-- JS populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- AI Insight Detail Modal -->
+      <div class="ai-modal-overlay" id="aiInsightModal">
+        <div class="ai-modal-content">
+          <div class="ai-modal-header">
+            <div class="ai-modal-header-icon" id="aiModalIcon"></div>
+            <div class="ai-modal-title">
+              <h2 id="aiModalTitle">Insight Detail</h2>
+              <p id="aiModalSubtitle">Supporting metrics and analysis</p>
+            </div>
+            <button class="ai-modal-close" id="aiModalClose">&#10005;</button>
+          </div>
+          <div class="ai-modal-body">
+            <div class="ai-modal-finding" id="aiModalFinding"></div>
+            <div class="ai-modal-metrics-grid" id="aiModalMetricsGrid"></div>
+            <div class="ai-modal-action-section">
+              <div class="ai-modal-action-label">&#9889; Recommended Action</div>
+              <div class="ai-modal-action-text" id="aiModalAction"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 8: SETTINGS -->
+      <section class="dashboard-view" id="view-settings">
+        <div class="view-header">
+          <div>
+            <span class="breadcrumb">Preferences &gt; Settings</span>
+            <h1 class="view-title">System Settings</h1>
+            <p class="view-subtitle">Manage preferences, notifications thresholds, dashboard parameters, and profile details.</p>
+          </div>
+        </div>
+
+        <div class="settings-card glass-panel">
+          <div class="settings-section">
+            <h3>Profile Settings</h3>
+            <div class="settings-form-row">
+              <div class="form-group">
+                <label for="set-name">Full Name</label>
+                <input type="text" id="set-name" value="shrikant" />
+              </div>
+              <div class="form-group">
+                <label for="set-email">Email Address</label>
+                <input type="email" id="set-email" value="shrikant@demo.com" />
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3>System Preference Configuration</h3>
+            <div class="settings-toggle-row">
+              <div>
+                <h4>Enable Live Notifications</h4>
+                <p>Get alerted immediately on large transaction values (&gt; &#8377;5,00,000)</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" checked />
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <div class="settings-toggle-row">
+              <div>
+                <h4>Predictive Models Mode</h4>
+                <p>Run real-time background calculations for the AI strategy panel</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" checked />
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-section">
+            <h3>User Management</h3>
+            <div class="user-management-table-container" style="overflow-x: auto; margin-top: 15px;">
+              <table class="orders-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody id="user-mgmt-tbody">
+                  <!-- Populated by JS -->
+                  <tr><td colspan="4" style="text-align:center;">Loading users...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="settings-footer">
+            <button class="btn btn-primary" id="saveSettingsBtn">Save Configuration Settings</button>
+          </div>
+        </div>
+      </section>
+
+            <!-- VIEW 9: EXECUTIVE REPORTS -->
+      <section class="dashboard-view" id="view-executive-reports">
+        <div class="view-header">
+          <div>
+            <span class="breadcrumb">Management &gt; Executive Reports</span>
+            <h1 class="view-title">Executive Summary & Business Reports</h1>
+            <p class="view-subtitle">Comprehensive business summaries and strategic insights.</p>
+          </div>
+          <div class="view-actions">
+            <button class="btn btn-secondary" id="execExportCSVBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+              </svg>
+              <span>Export CSV (&#8377;)</span>
+            </button>
+            <button class="btn btn-primary" id="execDownloadPDFBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              </svg>
+              <span>Export PDF Report</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="executive-report-grid">
+          
+          <!-- Revenue Summary -->
+          <div class="report-card">
+            <div class="report-card-header">
+              <h3>Revenue Summary</h3>
+            </div>
+            <div class="report-card-body">
+              <table class="data-table">
+                <tbody>
+                  <tr>
+                    <td>Total Portfolio Revenue</td>
+                    <td id="exec-rev-total" class="font-mono strong text-right">--</td>
+                  </tr>
+                  <tr>
+                    <td>Profit Margin</td>
+                    <td id="exec-rev-margin" class="font-mono text-right">--</td>
+                  </tr>
+                  <tr>
+                    <td>Projected Next Period</td>
+                    <td id="exec-rev-next" class="font-mono text-right">--</td>
+                  </tr>
+                  <tr>
+                    <td>Expected Growth</td>
+                    <td id="exec-rev-growth" class="font-mono text-right">--</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Sales Performance Report -->
+          <div class="report-card">
+            <div class="report-card-header">
+              <h3>Sales Performance Report</h3>
+            </div>
+            <div class="report-card-body">
+              <table class="data-table">
+                <tbody>
+                  <tr>
+                    <td>Total Sales</td>
+                    <td id="exec-sales-total" class="font-mono strong text-right">--</td>
+                  </tr>
+                  <tr>
+                    <td>Top Performing Product</td>
+                    <td id="exec-sales-product" class="text-right">--</td>
+                  </tr>
+                  <tr>
+                    <td>Product Revenue</td>
+                    <td id="exec-sales-product-rev" class="font-mono text-right">--</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Customer Growth Report -->
+          <div class="report-card">
+            <div class="report-card-header">
+              <h3>Customer Growth Report</h3>
+            </div>
+            <div class="report-card-body">
+              <table class="data-table">
+                <tbody>
+                  <tr>
+                    <td>Total Customers</td>
+                    <td id="exec-cust-total" class="font-mono strong text-right">--</td>
+                  </tr>
+                  <tr>
+                    <td>Fastest Growing Segment</td>
+                    <td id="exec-cust-segment" class="text-right">--</td>
+                  </tr>
+                  <tr>
+                    <td>Customer Satisfaction (NPS)</td>
+                    <td id="exec-cust-nps" class="font-mono text-right">--</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Regional Performance Report -->
+          <div class="report-card">
+            <div class="report-card-header">
+              <h3>Regional Performance Report</h3>
+            </div>
+            <div class="report-card-body">
+              <table class="data-table">
+                <tbody>
+                  <tr>
+                    <td>Top Growth Region</td>
+                    <td id="exec-region-top" class="text-right">--</td>
+                  </tr>
+                  <tr>
+                    <td>Region Revenue</td>
+                    <td id="exec-region-rev" class="font-mono text-right">--</td>
+                  </tr>
+                  <tr>
+                    <td>Total Orders</td>
+                    <td id="exec-region-orders" class="font-mono text-right">--</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- AI Business Recommendations -->
+          <div class="report-card" style="grid-column: 1 / -1;">
+            <div class="report-card-header">
+              <h3>AI Business Recommendations</h3>
+            </div>
+            <div class="report-card-body">
+              <ul class="exec-recommendations-list" id="exec-recommendations-list">
+                <!-- Populated by JS -->
+                <li>Loading recommendations...</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    
+      <!-- VIEW 10: DATA MANAGEMENT -->
+      
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <div class="footer-left">
+        <strong>InsightHub</strong> &bull; Business Intelligence Platform
+      </div>
+      <div class="footer-right">
+        Designed for executive decision making &bull; v3.1.0 &bull; Secure AES-256
+      </div>
+    </footer>
+  </div>
+
+  <!-- Global Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Global Premium Modal -->
+  <div class="modal-backdrop" id="globalModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">Details View</h3>
+        <button class="modal-close" id="modalCloseBtn" aria-label="Close Modal">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Content dynamically injected -->
+      </div>
+    </div>
+  </div>
+
+  <!-- App Logic script -->
+  <script src="app.js?v=4.2.0"></script>
+</body>
+</html>
