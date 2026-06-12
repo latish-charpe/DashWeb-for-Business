@@ -21,7 +21,7 @@ if not _DATABASE_URL:
         "Set DATABASE_URL on Render before deploying.",
         RuntimeWarning
     )
-    _DATABASE_URL = 'mysql+mysqlconnector://root:root%40123@127.0.0.1:3306/insighthub'
+    _DATABASE_URL = 'postgresql+psycopg2://postgres:root@127.0.0.1:5432/insighthub'
 
 # ---------------------------------------------------------------------------
 # SECRET_KEY: must be set in production for secure sessions.
@@ -222,7 +222,7 @@ def get_filtered_query(exclude_params=None):
         if not month or month == 'null' or month == 'undefined' or 'month' in exclude_params:
             start_date, end_date = get_period_bounds(period)
             if start_date and end_date:
-                q = q.filter(func.str_to_date(Order.date, '%d/%m/%Y').between(start_date, end_date))
+                q = q.filter(func.to_date(Order.date, 'DD/MM/YYYY').between(start_date, end_date))
                 
     return q
 
@@ -549,7 +549,7 @@ def get_metrics():
             curr_rev = revenue
             
             if prev_start and prev_end:
-                prev_q = q_base.filter(func.str_to_date(Order.date, '%d/%m/%Y').between(prev_start, prev_end))
+                prev_q = q_base.filter(func.to_date(Order.date, 'DD/MM/YYYY').between(prev_start, prev_end))
                 prev_rev_val = prev_q.with_entities(func.sum(Order.amount)).scalar()
                 prev_rev = float(prev_rev_val) if prev_rev_val is not None else 0.0
             else:
@@ -595,7 +595,7 @@ def get_metrics():
             curr_start, curr_end = get_period_bounds(period)
             prev_start, prev_end = get_previous_period_bounds(period)
             if prev_start and prev_end:
-                prev_nps_q = q_base.filter(func.str_to_date(Order.date, '%d/%m/%Y').between(prev_start, prev_end))
+                prev_nps_q = q_base.filter(func.to_date(Order.date, 'DD/MM/YYYY').between(prev_start, prev_end))
                 p_delivered = prev_nps_q.filter(Order.status == 'Delivered').count()
                 p_pending = prev_nps_q.filter(Order.status == 'Pending').count()
                 p_total = prev_nps_q.count()
@@ -689,7 +689,7 @@ def get_orders():
         if start_date_str and end_date_str:
             try:
                 # Assuming UI sends YYYY-MM-DD
-                q = q.filter(func.str_to_date(Order.date, '%d/%m/%Y').between(start_date_str, end_date_str))
+                q = q.filter(func.to_date(Order.date, 'DD/MM/YYYY').between(start_date_str, end_date_str))
             except:
                 pass
                 
@@ -1143,7 +1143,7 @@ def get_ai_insights():
             curr_start, curr_end = get_period_bounds(period)
             prev_start, prev_end = get_previous_period_bounds(period)
             if prev_start and prev_end:
-                prev_q = q_base.filter(func.str_to_date(Order.date, '%d/%m/%Y').between(prev_start, prev_end))
+                prev_q = q_base.filter(func.to_date(Order.date, 'DD/MM/YYYY').between(prev_start, prev_end))
                 prev_rev_val = prev_q.with_entities(func.sum(Order.amount)).scalar()
                 prev_rev = float(prev_rev_val) if prev_rev_val else 0.0
             else:
