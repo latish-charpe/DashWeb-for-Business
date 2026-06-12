@@ -1706,17 +1706,22 @@ document.addEventListener('DOMContentLoaded', () => {
       // Calculate dynamic initials based on username
       let initials = '??';
       const usrLower = displayUser.toLowerCase();
-      if (usrLower === 'shrikant') {
+      // Known user mappings
+      if (usrLower === 'shrikant' || usrLower === 'shrikant keche') {
           initials = 'SK';
       } else if (usrLower === 'manager') {
           initials = 'MG';
       } else if (usrLower === 'analyst') {
           initials = 'AN';
       } else {
-          if (displayUser.length >= 2) {
-              initials = displayUser.substring(0, 2).toUpperCase();
-          } else if (displayUser.length === 1) {
-              initials = displayUser.substring(0, 1).toUpperCase();
+          // Generic: take first letter of each word (up to 2 words)
+          const words = displayUser.trim().split(/\s+/);
+          if (words.length >= 2) {
+              initials = (words[0][0] + words[words.length - 1][0]).toUpperCase();
+          } else if (words[0] && words[0].length >= 2) {
+              initials = words[0].substring(0, 2).toUpperCase();
+          } else if (words[0] && words[0].length === 1) {
+              initials = words[0][0].toUpperCase();
           }
       }
       

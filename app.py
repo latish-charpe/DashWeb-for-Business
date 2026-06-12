@@ -1,19 +1,54 @@
 import csv
 import io
 import uuid
-from datetime import datetime
 import os
-import datetime
+import datetime as dt_module
 from flask import Flask, jsonify, request, send_from_directory, send_file, session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 
-app = Flask(__name__, static_folder='.', static_url_path='')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'mysql+mysqlconnector://root:root%40123@127.0.0.1:3306/insighthub')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = os.environ.get('SECRET_KEY', 'super_secret_dashweb_key')
-app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=15)
+# ---------------------------------------------------------------------------
+# Database URL: required in production (set as Render environment variable).
+# Falls back to local dev DB only when DATABASE_URL is not set.
+# ---------------------------------------------------------------------------
+_DATABASE_URL = os.environ.get('DATABASE_URL')
+if not _DATABASE_URL:
+    # Local development fallback — NEVER used on Render
+    import warnings
+    warnings.warn(
+        "DATABASE_URL environment variable is not set. "
+        "Using local development database. "
+        "Set DATABASE_URL on Render before deploying.",
+        RuntimeWarning
+    )
+    _DATABASE_URL = 'mysql+mysqlconnector://root:root%40123@127.0.0.1:3306/insighthub'
 
+# ---------------------------------------------------------------------------
+# SECRET_KEY: must be set in production for secure sessions.
+# ---------------------------------------------------------------------------
+_SECRET_KEY = os.environ.get('SECRET_KEY')
+if not _SECRET_KEY:
+    import secrets
+    _SECRET_KEY = secrets.token_hex(32)
+    import warnings
+    warnings.warn(
+        "SECRET_KEY environment variable is not set. "
+        "A random key was generated — sessions will NOT persist across restarts. "
+        "Set SECRET_KEY on Render before deploying.",
+        RuntimeWarning
+    )
+
+app = Flask(__name__, static_folder='.', static_url_path='')
+app.config['SQLALCHEMY_DATABASE_URI'] = _DATABASE_URL
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'pool_recycle': 280,       # Recycle connections before Render's 5-min idle timeout
+    'pool_pre_ping': True,     # Verify connection health before using from pool
+    'pool_size': 5,
+    'max_overflow': 10,
+}
+app.secret_key = _SECRET_KEY
+app.config['PERMANENT_SESSION_LIFETIME'] = dt_module.timedelta(minutes=30)
 
 db = SQLAlchemy(app)
 
@@ -97,66 +132,66 @@ profile_settings = {
 
 # --- Helper Query Filtering Builder ---
 def get_period_bounds(period):
-    anchor = datetime.date(2026, 6, 12)
+    anchor = dt_module.date(2026, 6, 12)
     if period == 'daily':
         return anchor, anchor
     elif period == 'weekly':
-        start = anchor - datetime.timedelta(days=anchor.weekday())
-        end = start + datetime.timedelta(days=6)
+        start = anchor - dt_module.timedelta(days=anchor.weekday())
+        end = start + dt_module.timedelta(days=6)
         return start, end
     elif period == 'monthly':
-        start = datetime.date(anchor.year, anchor.month, 1)
+        start = dt_module.date(anchor.year, anchor.month, 1)
         if anchor.month == 12:
-            end = datetime.date(anchor.year, 12, 31)
+            end = dt_module.date(anchor.year, 12, 31)
         else:
-            end = datetime.date(anchor.year, anchor.month + 1, 1) - datetime.timedelta(days=1)
+            end = dt_module.date(anchor.year, anchor.month + 1, 1) - dt_module.timedelta(days=1)
         return start, end
     elif period == 'quarterly':
         q_num = (anchor.month - 1) // 3 + 1
         q_start_month = (q_num - 1) * 3 + 1
-        start = datetime.date(anchor.year, q_start_month, 1)
+        start = dt_module.date(anchor.year, q_start_month, 1)
         if q_start_month + 3 > 12:
-            end = datetime.date(anchor.year, 12, 31)
+            end = dt_module.date(anchor.year, 12, 31)
         else:
-            end = datetime.date(anchor.year, q_start_month + 3, 1) - datetime.timedelta(days=1)
+            end = dt_module.date(anchor.year, q_start_month + 3, 1) - dt_module.timedelta(days=1)
         return start, end
     elif period == 'yearly':
-        start = datetime.date(anchor.year, 1, 1)
-        end = datetime.date(anchor.year, 12, 31)
+        start = dt_module.date(anchor.year, 1, 1)
+        end = dt_module.date(anchor.year, 12, 31)
         return start, end
     return None, None
 
 def get_previous_period_bounds(period):
-    anchor = datetime.date(2026, 6, 12)
+    anchor = dt_module.date(2026, 6, 12)
     if period == 'daily':
-        prev = anchor - datetime.timedelta(days=1)
+        prev = anchor - dt_module.timedelta(days=1)
         return prev, prev
     elif period == 'weekly':
-        curr_start = anchor - datetime.timedelta(days=anchor.weekday())
-        start = curr_start - datetime.timedelta(days=7)
-        end = start + datetime.timedelta(days=6)
+        curr_start = anchor - dt_module.timedelta(days=anchor.weekday())
+        start = curr_start - dt_module.timedelta(days=7)
+        end = start + dt_module.timedelta(days=6)
         return start, end
     elif period == 'monthly':
         if anchor.month == 1:
-            start = datetime.date(anchor.year - 1, 12, 1)
-            end = datetime.date(anchor.year - 1, 12, 31)
+            start = dt_module.date(anchor.year - 1, 12, 1)
+            end = dt_module.date(anchor.year - 1, 12, 31)
         else:
-            start = datetime.date(anchor.year, anchor.month - 1, 1)
-            end = datetime.date(anchor.year, anchor.month, 1) - datetime.timedelta(days=1)
+            start = dt_module.date(anchor.year, anchor.month - 1, 1)
+            end = dt_module.date(anchor.year, anchor.month, 1) - dt_module.timedelta(days=1)
         return start, end
     elif period == 'quarterly':
         q_num = (anchor.month - 1) // 3 + 1
         if q_num == 1:
-            start = datetime.date(anchor.year - 1, 10, 1)
-            end = datetime.date(anchor.year - 1, 12, 31)
+            start = dt_module.date(anchor.year - 1, 10, 1)
+            end = dt_module.date(anchor.year - 1, 12, 31)
         else:
             prev_q_start_month = (q_num - 2) * 3 + 1
-            start = datetime.date(anchor.year, prev_q_start_month, 1)
-            end = datetime.date(anchor.year, prev_q_start_month + 3, 1) - datetime.timedelta(days=1)
+            start = dt_module.date(anchor.year, prev_q_start_month, 1)
+            end = dt_module.date(anchor.year, prev_q_start_month + 3, 1) - dt_module.timedelta(days=1)
         return start, end
     elif period == 'yearly':
-        start = datetime.date(anchor.year - 1, 1, 1)
-        end = datetime.date(anchor.year - 1, 12, 31)
+        start = dt_module.date(anchor.year - 1, 1, 1)
+        end = dt_module.date(anchor.year - 1, 12, 31)
         return start, end
     return None, None
 
@@ -196,9 +231,9 @@ with app.app_context():
     db.create_all()
     if User.query.count() == 0:
         demo_users = [
-            User(username='shrikant', password='shrikant123', role='CEO', full_name='shrikant'),
-            User(username='manager', password='manager123', role='Manager', full_name='manager'),
-            User(username='analyst', password='analyst123', role='Analyst', full_name='analyst')
+            User(username='shrikant', password='shrikant123', role='CEO', full_name='Shrikant Keche'),
+            User(username='manager', password='manager123', role='Manager', full_name='Manager'),
+            User(username='analyst', password='analyst123', role='Analyst', full_name='Analyst')
         ]
         db.session.bulk_save_objects(demo_users)
         db.session.commit()
@@ -232,9 +267,9 @@ def add_order():
         
         # Calculate month from date
         try:
-            dt = datetime.strptime(date_str, '%d/%m/%Y')
-            month = dt.strftime('%b') # 'Jul', 'Aug', etc.
-        except:
+            dt = dt_module.datetime.strptime(date_str, '%d/%m/%Y')
+            month = dt.strftime('%b')  # 'Jul', 'Aug', etc.
+        except Exception:
             month = 'Jan'
             
         new_order = Order(
@@ -279,9 +314,9 @@ def upload_orders():
                 date_str = row.get('Date', '')
                 
                 try:
-                    dt = datetime.strptime(date_str, '%d/%m/%Y')
+                    dt = dt_module.datetime.strptime(date_str, '%d/%m/%Y')
                     month = dt.strftime('%b')
-                except:
+                except Exception:
                     month = 'Jan'
 
                 new_order = Order(
@@ -307,7 +342,7 @@ def upload_orders():
         
         history = UploadHistory(
             file_name=file.filename,
-            upload_date=datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+            upload_date=dt_module.datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
             records_imported=success_count,
             uploaded_by=uploader
         )
@@ -824,7 +859,7 @@ def get_activities():
         return jsonify({'error': str(e)}), 500
 
 def get_chart_categories_and_orders(q, period, month_filter):
-    anchor = datetime.date(2026, 6, 12)
+    anchor = dt_module.date(2026, 6, 12)
     days_in_month = {
         'Jan': 31, 'Feb': 28, 'Mar': 31, 'Apr': 30, 'May': 31, 'Jun': 30,
         'Jul': 31, 'Aug': 31, 'Sep': 30, 'Oct': 31, 'Nov': 30, 'Dec': 31
@@ -852,18 +887,18 @@ def get_chart_categories_and_orders(q, period, month_filter):
         return categories, orders, map_order_to_cat
 
     if period == 'daily' or period == 'weekly':
-        week_start = anchor - datetime.timedelta(days=anchor.weekday())
+        week_start = anchor - dt_module.timedelta(days=anchor.weekday())
         categories = []
         for i in range(7):
-            d = week_start + datetime.timedelta(days=i)
+            d = week_start + dt_module.timedelta(days=i)
             categories.append(d.strftime('%d %b'))
             
         orders = q.all()
         
         def map_order_to_cat(o):
             try:
-                d = datetime.datetime.strptime(o.date, '%d/%m/%Y').date()
-                if week_start <= d <= week_start + datetime.timedelta(days=6):
+                d = dt_module.datetime.strptime(o.date, '%d/%m/%Y').date()
+                if week_start <= d <= week_start + dt_module.timedelta(days=6):
                     return d.strftime('%d %b')
             except:
                 pass
